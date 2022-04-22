@@ -49,11 +49,25 @@ namespace Connect4_Engine.src
             this.ColumnsPosition = ColumnsPosition;
         }
 
+        /// <summary>
+        /// 
+        /// This function returns the bit board array
+        /// 
+        /// </summary>
+        /// 
+        /// <returns> (long[]) The array of the bitb boards</returns>
         public long[] GetBitBoard()
         {
             return this.BitBoard;
         }
 
+        /// <summary>
+        /// 
+        /// This function makes a DeepCopy of the Board object
+        /// 
+        /// </summary>
+        /// 
+        /// <returns> (Board) A DeepCopy of the current object </returns>
         public Board DeepCopy()
         {
             return new Board(this.BitBoard, this.ColumnsPosition);
@@ -86,7 +100,7 @@ namespace Connect4_Engine.src
         /// 
         /// <param name="InsertionColumne"> (int) The column that the player wish to insert his token to</param>
         /// 
-        /// <returns> (bool) True if the insertion succeed. Else false</returns>
+        /// <returns> (bool) True if the insertion succeeded. Else false</returns>
         public bool InsertToken(TokenType PlayerToken, int InsertionColumne)
         {
             if (!ValidateTokenInsertion(InsertionColumne - 1))
@@ -98,6 +112,18 @@ namespace Connect4_Engine.src
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// This function removes a tocken from the board
+        /// 
+        /// </summary>
+        /// 
+        /// <param name="PlayerToken"> (TokenType) The player`s token type to remove -
+        ///                           This parameter actually effects on the board that the token will be inserted.
+        ///                           Players1 bitboard or players2
+        /// </param>
+        /// <param name="InsertionColumne"> (int) The column that the player wish to insert his token to </param>
+        /// <returns> (bool) True if the removal succeeded. Else false </returns>
         public bool RemoveToken(TokenType PlayerToken, int InsertionColumne)
         {
             long InsertionBit = 1L << --this.ColumnsPosition[InsertionColumne - 1];
@@ -146,7 +172,13 @@ namespace Connect4_Engine.src
             return moves;
         }
 
-
+        /// <summary>
+        /// 
+        /// This function merage both players bit boards into one string with thair tokens.
+        /// 
+        /// </summary>
+        /// 
+        /// <returns> (String) a meraged board of both players bitboard </returns>
         private String MergePlayerBoards()
         {
             StringBuilder sb = new StringBuilder(new String('-', 49));
@@ -175,6 +207,10 @@ namespace Connect4_Engine.src
             return sb.ToString();
         }
 
+        /// <summary>
+        /// This is a ToString function to print the board
+        /// </summary>
+        /// <returns> (string) A string that represent the board</returns>
         public override string ToString()
         {
             String MergedBitBoard;
