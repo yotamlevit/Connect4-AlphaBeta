@@ -1,5 +1,7 @@
 ﻿using System;
 
+using System.Threading.Tasks;
+
 using Connect4_Engine.src;
 
 namespace Connect4_EngineTest
@@ -7,60 +9,51 @@ namespace Connect4_EngineTest
     class Program
     {
 
-        public static TokenType Fun(TokenType a)
-        {
-            return a;
-        }
+       
 
         static void Main(string[] args)
         {
-            //TokenType a = 0;
-            int a = 0;
 
-            TokenType b = Fun((TokenType)a);
-            Console.WriteLine(b);
-            Console.WriteLine((int)b);
+            Game game = new Game();
+            game.Start();
+            Console.ReadLine();
+
+
+            //Board board = new Board();
+            //Console.WriteLine(board.AvailableMoves().Count);
+
             /*
-            Board board = new Board(5, 6);
+            Board board = new Board();
 
-            board.PrintBoard();
+            board.InsertToken(TokenType.Player1, 1);
+            Console.WriteLine(board.ToString());
+            System.Threading.Thread.Sleep(1000);
+            Console.Clear();
 
-            Console.WriteLine("----------------------------------------");
+            board.InsertToken(TokenType.Player1, 1);
+            Console.WriteLine(board.ToString());
+            System.Threading.Thread.Sleep(1000);
+            Console.Clear();
 
-            board.InsertToken(TokenType.Player1, 2);
+            board.InsertToken(TokenType.Player1, 1);
+            Console.WriteLine(board.ToString());
+            System.Threading.Thread.Sleep(1000);
+            Console.Clear();
 
-            board.PrintBoard();
+            board.InsertToken(TokenType.Player1, 1);
+            Console.WriteLine(board.ToString());
+            System.Threading.Thread.Sleep(1000);
+            Console.Clear();
 
-            Console.WriteLine("----------------------------------------");
+            board.InsertToken(TokenType.Player2, 1);
+            Console.WriteLine(board.ToString());
+            System.Threading.Thread.Sleep(1000);
+            Console.Clear();
 
-            board.InsertToken(TokenType.Player1, 2);
-
-            board.PrintBoard();
-
-            Console.WriteLine("----------------------------------------");
-
-            board.InsertToken(TokenType.Player1, 2);
-
-            board.PrintBoard();
-
-            Console.WriteLine("----------------------------------------");
-
-            board.InsertToken(TokenType.Player1, 2);
-
-            board.PrintBoard();
-
-            Console.WriteLine("----------------------------------------");
-
-            board.InsertToken(TokenType.Player1, 2);
-
-            board.PrintBoard();
-
-            Console.WriteLine("----------------------------------------");
-
-            Console.WriteLine(board.InsertToken(TokenType.Player1, 2));
-
-            board.PrintBoard();
+            board.InsertToken(TokenType.Player1, 3);
+            Console.WriteLine(board.ToString());
             */
+
         }
     }
 }
