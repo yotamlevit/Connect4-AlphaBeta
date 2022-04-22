@@ -7,7 +7,7 @@ namespace Connect4_Engine.src
     /// <summary>
     /// This function represent a connect 4 game board.
     /// </summary>
-    class Board
+    public class Board
     {
 
         //The number of columns on the board
@@ -25,6 +25,8 @@ namespace Connect4_Engine.src
         //If the bit on a column`s top row is 1 the column if full.
         private static readonly long TopRow = 0b1000000_1000000_1000000_1000000_1000000_1000000_1000000L;
 
+        private static readonly byte RowMask = 0b0111111;
+
         //The directions that make 4 tokens "connect"
         //1 - vertical ; 7 - horizontal ; 6 - diagonal \ ; 8 - diagonal /
         private static readonly int[] WinDirections = { 1, 7, 6, 8};
@@ -38,7 +40,23 @@ namespace Connect4_Engine.src
         public Board()
         {
             this.BitBoard = new long[2];
-            this.ColumnsPosition = new int[] {0, 7, 15, 24, 30, 35, 42};
+            this.ColumnsPosition = new int[] {0, 7, 14, 21, 28, 35, 42};
+        }
+
+        public Board(long[] BitBoard, int[] ColumnsPosition)
+        {
+            this.BitBoard = BitBoard;
+            this.ColumnsPosition = ColumnsPosition;
+        }
+
+        public long[] GetBitBoard()
+        {
+            return this.BitBoard;
+        }
+
+        public Board DeepCopy()
+        {
+            return new Board(this.BitBoard, this.ColumnsPosition);
         }
 
         /// <summary>
@@ -52,7 +70,7 @@ namespace Connect4_Engine.src
         /// <returns> (bool) True if the column if free for insertion false if not</returns>
         private bool ValidateTokenInsertion(int InsertionColumneIndex)
         {
-            return (TopRow & (1L << this.ColumnsPosition[InsertionColumneIndex])) == 0;
+            return 0 <= InsertionColumneIndex && InsertionColumneIndex <= 6 && (TopRow & (1L << this.ColumnsPosition[InsertionColumneIndex])) == 0;
         }
 
         /// <summary>
@@ -80,6 +98,14 @@ namespace Connect4_Engine.src
             return true;
         }
 
+        public bool RemoveToken(TokenType PlayerToken, int InsertionColumne)
+        {
+            long InsertionBit = 1L << --this.ColumnsPosition[InsertionColumne - 1];
+            this.BitBoard[(int)PlayerToken] ^= InsertionBit;
+
+            return true;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -94,7 +120,7 @@ namespace Connect4_Engine.src
             {
                 CheckBoard = this.BitBoard[(int)PlayerToken] & (this.BitBoard[(int)PlayerToken] >> Direction);
 
-                if ((CheckBoard & (CheckBoard >> (2 * Direction)) & (CheckBoard >> (3 * Direction))) != 0)
+                if ((CheckBoard & (CheckBoard >> (2 * Direction))) != 0)// & (CheckBoard >> (3 * Direction))
                     return true;    
             }
 
@@ -118,6 +144,65 @@ namespace Connect4_Engine.src
             }
 
             return moves;
+        }
+
+
+        private String MergePlayerBoards()
+        {
+            StringBuilder sb = new StringBuilder(new String('-', 49));
+
+            char[] tmp;
+            String PlayerBitBoard;
+            int TokenIndex;
+            char TokenChar;
+            for (int Player = 0; Player < 2; Player++)
+            {
+                tmp = Convert.ToString(this.BitBoard[Player], 2).ToCharArray();
+                Array.Reverse(tmp);
+                PlayerBitBoard = new String(tmp);
+
+                TokenIndex = PlayerBitBoard.IndexOf('1');
+                TokenChar = Player == 0 ? 'X' : 'O';
+
+                while (TokenIndex != -1)
+                {
+                    sb[TokenIndex] = TokenChar;
+                    TokenIndex = PlayerBitBoard.IndexOf('1', TokenIndex + 1);
+
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public override string ToString()
+        {
+            String MergedBitBoard;
+            String ParsedBitBoard;
+            StringBuilder sb = new StringBuilder();
+
+            MergedBitBoard = this.MergePlayerBoards();
+
+            sb.AppendLine("+---------------------+");
+            
+            for (int Row = 5; Row >= 0; Row--)
+            {
+                sb.Append("|");
+
+                for (int Col = 0; Col < 7; Col++)
+                {
+                    sb.Append(" " + MergedBitBoard[Row + (7 * Col)] + " ");
+                }
+
+                sb.Append("|").AppendLine();
+            }
+
+            sb.AppendLine("+---------------------+");
+            sb.AppendLine("  1  2  3  4  5  6  7");
+
+            ParsedBitBoard = sb.ToString();
+
+            return ParsedBitBoard;
         }
     }
 }
