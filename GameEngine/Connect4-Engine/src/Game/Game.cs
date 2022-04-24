@@ -20,7 +20,7 @@ namespace Connect4_Engine.src
         {
             this.GameBoard = new Board();
             this.TurnCount = 0;
-            this.Moves = new int[42];    
+            this.Moves = new int[47];    
 
         }
 
