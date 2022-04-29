@@ -136,9 +136,10 @@ namespace Connect4_Engine.src
         /// 
         /// </summary>
         /// <param name="PlayerToken"> (TokenType) The player to check hit </param>
+        /// <param name="StreakCount"> (int) The number of tokens to connect </param>
         /// 
         /// <returns>(bool) True if win, else false</returns>
-        public bool CheckPlayerWin(TokenType PlayerToken)
+        public bool CheckPlayerWin(TokenType PlayerToken, int StreakCount)
         {
             long CheckBoard;
 
@@ -146,7 +147,7 @@ namespace Connect4_Engine.src
             {
                 CheckBoard = this.BitBoard[(int)PlayerToken] & (this.BitBoard[(int)PlayerToken] >> Direction);
 
-                if ((CheckBoard & (CheckBoard >> (2 * Direction))) != 0)// & (CheckBoard >> (3 * Direction))
+                if ((CheckBoard & (CheckBoard >> ((StreakCount -2) * Direction))) != 0)
                     return true;    
             }
 

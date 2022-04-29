@@ -13,15 +13,17 @@ namespace Connect4_Engine.src
 
         private int[] Moves;
 
+        private int ConnectStreak;
+
         /// <summary>
         /// Init Function
         /// </summary>
-        public Game()
+        public Game(int ConnectStreak)
         {
             this.GameBoard = new Board();
             this.TurnCount = 0;
-            this.Moves = new int[47];    
-
+            this.Moves = new int[47];
+            this.ConnectStreak = ConnectStreak;
         }
 
         public int GetPlayerMove()
@@ -50,7 +52,7 @@ namespace Connect4_Engine.src
                     Console.WriteLine("Errorrrr");
                 }
 
-                IsWin = this.GameBoard.CheckPlayerWin(CurrentPlayer);
+                IsWin = this.GameBoard.CheckPlayerWin(CurrentPlayer, ConnectStreak);
             }
             Console.Clear();
             Console.WriteLine(this.GameBoard.ToString());
