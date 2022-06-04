@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Connect4_Engine.src.AI;
 
 namespace Connect4_Engine.src
 {
@@ -34,6 +35,8 @@ namespace Connect4_Engine.src
 
         public void Start()
         {
+            AlphaBeta a = new AlphaBeta(TokenType.Player2, 4);
+
             bool IsWin = false;
             int PlayerMove;
             TokenType CurrentPlayer = TokenType.Player1;
@@ -46,7 +49,19 @@ namespace Connect4_Engine.src
 
                 Console.WriteLine(this.GameBoard.ToString());
 
-                PlayerMove = GetPlayerMove();
+                if (CurrentPlayer == TokenType.Player1)
+                {
+                    PlayerMove = GetPlayerMove();
+                }
+                else
+                {
+                    PlayerMove = GetPlayerMove();
+                    if (PlayerMove == 9)
+                    {
+                        PlayerMove = a.FindBestMove(this.GameBoard, this.TurnCount);
+                        int.Parse(Console.ReadLine());
+                    }
+                }
                 if (!MakeMove(PlayerMove))
                 {
                     Console.WriteLine("Errorrrr");
@@ -57,14 +72,10 @@ namespace Connect4_Engine.src
             Console.Clear();
             Console.WriteLine(this.GameBoard.ToString());
 
-            if (this.GameBoard.AvailableMoves().Count == 0)
-            {
-                Console.WriteLine("Board if FULL its a TIE");
-            }
-            else
-            {
+            if (IsWin)
                 Console.WriteLine(CurrentPlayer + " WIN!!!!!!!!!");
-            }
+            else if (this.GameBoard.AvailableMoves().Count == 0)
+                Console.WriteLine("Board is FULL its a TIE");
         }
 
         public bool MakeMove(int InsertionColumne)
