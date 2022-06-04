@@ -13,8 +13,6 @@ namespace Connect4_Engine.src.AI
         private readonly TokenType AIPlayer;
         private readonly TokenType OpponentPlayer;
 
-        private int count;
-
 
         public AlphaBeta(TokenType AIPlayer, int DepthDifficulty)
         {
@@ -30,23 +28,6 @@ namespace Connect4_Engine.src.AI
                 (20 * Convert.ToInt32(GameBoard.CheckPlayerWin(this.OpponentPlayer, 3))) -
                 (10 * Convert.ToInt32(GameBoard.CheckPlayerWin(this.OpponentPlayer, 2)));
         }
-
-        /*
-        private int EvaluationFunction(Board GameBoard, TokenType player)
-        {
-            //Win AI
-            if (GameBoard.CheckPlayerWin(this.AIPlayer, 4))
-                return 2000000000; //int.MaxValue;
-
-            //Win Opponent
-            if (GameBoard.CheckPlayerWin(this.OpponentPlayer, 4))
-                return -2000000000;//int.MinValue;
-
-            int boardScore = DepthEvaluationFunction(GameBoard);
-
-            return player == this.AIPlayer ? boardScore : -boardScore;
-        }
-        */
 
         private int EvaluationFunction(Board GameBoard, TokenType player, int moveCount)
         {
@@ -67,8 +48,6 @@ namespace Connect4_Engine.src.AI
             int bestMove = 0, bestScore = int.MinValue, alphaBetaScore;
             bool moveResult;
             Board nextMoveBoard;
-
-            this.count = 0;
 
             for (int col = 1; col <= Board.Columns; col++)
             {
@@ -96,75 +75,11 @@ namespace Connect4_Engine.src.AI
             return bestMove;
         }
 
-        public int AlphaBetaNextMove(Board GameBoard, TokenType player, int moveCount, int alpha, int beta)
-        {
-            int bestScore, score, nextMoveCount;
-            Board nextMoveBoard;
-            bool moveResult;
-            TokenType nextPlayer;
-
-            this.count++;
-
-            // Draw
-            if (GameBoard.AvailableMoves().Count == 0)
-            {
-                //Console.WriteLine(GameBoard.ToString());
-                //Console.WriteLine(this.count + " - " + moveCount + " - Score: 0");
-                return 0;
-            }
-
-            if (GameBoard.CheckPlayerWin(player, 4))
-            {
-                //Console.WriteLine(GameBoard.ToString());
-                //Console.WriteLine(this.count + " - " + moveCount + " Score: " + (Board.Columns * Board.Rows + 1 - moveCount / 2));
-                return - (Board.Columns * Board.Rows + 1 - moveCount / 2);
-            }
-
-
-            bestScore = (Board.Columns * Board.Rows - 1 - moveCount / 2);
-
-            if (beta > bestScore)
-            {
-                beta = bestScore;
-                if (alpha >= beta)
-                    return beta;
-            }
-
-            // Set the next player for the next layer
-            nextPlayer = player == this.AIPlayer ? this.OpponentPlayer : this.AIPlayer;
-
-            nextMoveCount = ++moveCount;
-
-            //Console.WriteLine(GameBoard.ToString());
-
-            // Next moves
-            for (int Col = 1; Col <= Board.Columns; Col++)
-            {
-                nextMoveBoard = GameBoard.DeepCopy();
-                moveResult = nextMoveBoard.InsertToken(player, Col);
-                if (moveResult)
-                {
-                    score = -this.AlphaBetaNextMove(nextMoveBoard, nextPlayer, nextMoveCount, -beta, -alpha);
-                    nextMoveBoard.RemoveToken(player, Col);
-
-                    if (score >= beta) return score;
-                    if (score > alpha) alpha = score;
-                    
-                }
-
-            }
-
-            return alpha;
-
-        }
-
         public int NegaMaxNextMove(Board gameBoard, TokenType player, int moveCount)
         {
             int bestScore, nextMoveCount, negamaxScore;
             bool moveResult;
             TokenType nextPlayer;
-
-            this.count++;
 
             // Draw
             if (gameBoard.AvailableMoves().Count == 0)
