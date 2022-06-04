@@ -13,6 +13,9 @@ namespace Connect4_Engine.src
         //The number of columns on the board
         public static readonly int Columns = 7;
 
+        //The number of rows on the board
+        public static readonly int Rows = 6;
+
         //An array of bitboard for connect4 - Each bitboard in a long (8 bytes). There are two boards, one for player1 and another for player2.
         //The actual Board contains 42 bits (7*6). So we have left with 22 bits (because long is 8 bytes * 8 bits = 64 - 42 = 22).
         //We use the remaining 22 bits to create a top row that will act as "full flag" and borders.
@@ -132,6 +135,19 @@ namespace Connect4_Engine.src
             return true;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="PlayerToken"> (TokenType) The player to check hit </param>
+        /// <param name="StreakCount"> (int) The number of tokens to connect </param>
+        /// 
+        /// <returns>(bool) True if win, else false</returns>
+        public bool CheckPlayerWin(TokenType PlayerToken)
+        {
+            return CheckPlayerWin(PlayerToken, 4);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -150,6 +166,27 @@ namespace Connect4_Engine.src
                 if ((CheckBoard & (CheckBoard >> ((StreakCount -2) * Direction))) != 0)
                     return true;    
             }
+
+            return false;
+        }
+
+        public bool IsWinningMove(TokenType PlayerToken, int InsertionColumne)
+        {
+            bool isWin;
+
+            this.InsertToken(PlayerToken, InsertionColumne);
+            isWin = this.CheckPlayerWin(PlayerToken);
+            this.RemoveToken(PlayerToken, InsertionColumne);
+
+            return isWin;
+        }
+
+
+        public bool CanWinNextMove(TokenType PlayerToken)
+        {
+            for (int move = 1; move <= Columns; move++)
+                if (this.ValidateTokenInsertion(move) && IsWinningMove(PlayerToken, move))
+                    return true;
 
             return false;
         }
