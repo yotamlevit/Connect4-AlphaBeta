@@ -73,7 +73,13 @@ namespace Connect4_Engine.src
         /// <returns> (Board) A DeepCopy of the current object </returns>
         public Board DeepCopy()
         {
-            return new Board(this.BitBoard, this.ColumnsPosition);
+            long[] bitBoardCopy = new long[this.BitBoard.Length];
+            int[] columnsPositionCopy = new int[this.ColumnsPosition.Length];
+
+            this.BitBoard.CopyTo(bitBoardCopy, 0);
+            this.ColumnsPosition.CopyTo(columnsPositionCopy, 0);
+
+            return new Board(bitBoardCopy, columnsPositionCopy);
         }
 
         /// <summary>
